@@ -1,0 +1,11 @@
+# Prototype dependencies (all free tier compatible)
+twilio==9.0.5
+httpx==0.27.0
+pandas==2.2.2
+openpyxl==3.1.2
+Jinja2==3.1.4
+phonenumbers==8.13.37
+python-dotenv==1.0.1
+colorama==0.4.6
+tabulate==0.9.0
+pywhatkit==5.4

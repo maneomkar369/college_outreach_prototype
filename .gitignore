@@ -1,0 +1,28 @@
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Environment Variables
+.env
+
+# Python Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.mypy_cache/
+.pytest_cache/
+
+# Logs
+logs/
+*.log
+
+# PyWhatKit specific cache/images (if any generated)
+PyWhatKit_DB.txt
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/

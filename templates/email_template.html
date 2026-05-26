@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admissions Open — {{ college_name }}</title>
+  <style>
+    body { margin:0; padding:0; background:#f4f4f4; font-family: 'Segoe UI', Arial, sans-serif; }
+    .wrapper { max-width:600px; margin:30px auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); padding:36px 32px; text-align:center; }
+    .header h1 { color:#ffffff; margin:0; font-size:26px; font-weight:700; }
+    .header p { color:#c5cae9; margin:8px 0 0; font-size:14px; }
+    .body { padding:32px; }
+    .greeting { font-size:18px; font-weight:600; color:#1a237e; margin-bottom:16px; }
+    .text { color:#444; font-size:15px; line-height:1.7; margin-bottom:16px; }
+    .highlight { background:#e8eaf6; border-left:4px solid #3f51b5; padding:14px 18px; border-radius:0 6px 6px 0; margin:20px 0; }
+    .highlight p { margin:4px 0; color:#333; font-size:14px; }
+    .highlight strong { color:#1a237e; }
+    .cta { text-align:center; margin:28px 0; }
+    .cta a { background:#3f51b5; color:#ffffff; text-decoration:none; padding:14px 36px; border-radius:6px; font-size:15px; font-weight:600; display:inline-block; }
+    .cta a:hover { background:#303f9f; }
+    .footer { background:#f8f8f8; border-top:1px solid #e0e0e0; padding:20px 32px; text-align:center; }
+    .footer p { color:#888; font-size:12px; margin:4px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>{{ college_name }}</h1>
+      <p>Admissions Open — {{ admission_year }}</p>
+    </div>
+    <div class="body">
+      <p class="greeting">Dear {{ name }},</p>
+      <p class="text">
+        We are delighted to inform you that admissions for
+        <strong>{{ course }}</strong> at <strong>{{ college_name }}</strong>
+        are now open for the academic year <strong>{{ admission_year }}</strong>.
+      </p>
+      <p class="text">
+        Based in <strong>{{ city }}</strong>, you are just a step away from
+        beginning an extraordinary academic journey with us.
+      </p>
+
+      <div class="highlight">
+        <p>🎓 <strong>Program:</strong> {{ course }}</p>
+        <p>📅 <strong>Application Deadline:</strong> 31st July {{ admission_year[:4] }}</p>
+        <p>📞 <strong>Helpline:</strong> {{ college_phone }}</p>
+        <p>🌐 <strong>Website:</strong> {{ college_website }}</p>
+      </div>
+
+      <p class="text">
+        Our faculty, infrastructure, and placement record set us apart.
+        Limited seats are available — early applicants get priority consideration.
+      </p>
+
+      <div class="cta">
+        <a href="{{ college_website }}/apply">Apply Now →</a>
+      </div>
+
+      <p class="text" style="font-size:13px; color:#888;">
+        If you have any questions, reply to this email or call our admissions
+        helpline. We look forward to welcoming you to our campus.
+      </p>
+    </div>
+    <div class="footer">
+      <p>{{ college_name }} | {{ college_phone }}</p>
+      <p>{{ college_website }}</p>
+      <p style="margin-top:10px; font-size:11px;">
+        You received this because you expressed interest in our programs.<br>
+        <a href="{{ college_website }}/unsubscribe?email={{ email }}" style="color:#3f51b5;">Unsubscribe</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
