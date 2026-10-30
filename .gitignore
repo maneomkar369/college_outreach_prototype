@@ -4,7 +4,7 @@ env/
 .venv/
 
 # Environment Variables
-.env
+.env.example
 
 # Python Caches
 __pycache__/

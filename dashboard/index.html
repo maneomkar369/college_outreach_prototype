@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OutreachOS — College Outreach Automation</title>
+  <meta name="description" content="Glassmorphism dashboard for College Outreach Automation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .toast{position:fixed;bottom:28px;right:28px;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:.3s;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.15);pointer-events:none}
+    .toast.show{opacity:1;transform:none}
+    .toast-ok{background:rgba(16,185,129,.9);color:#fff}
+    .toast-err{background:rgba(239,68,68,.9);color:#fff}
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar glass" id="sidebar">
+      <div class="logo">
+        <span class="logo-icon">🎓</span>
+        <span class="logo-text">OutreachOS</span>
+      </div>
+      <nav class="nav">
+        <a href="#" class="nav-item active" data-view="dashboard" id="nav-dashboard"><span class="nav-icon">⚡</span><span>Dashboard</span></a>
+        <a href="#" class="nav-item" data-view="contacts"  id="nav-contacts" ><span class="nav-icon">👥</span><span>Contacts</span></a>
+        <a href="#" class="nav-item" data-view="campaign"  id="nav-campaign" ><span class="nav-icon">🚀</span><span>Campaign</span></a>
+        <a href="#" class="nav-item" data-view="results"   id="nav-results"  ><span class="nav-icon">📊</span><span>Results</span></a>
+        <a href="#" class="nav-item" data-view="settings"  id="nav-settings" ><span class="nav-icon">⚙️</span><span>Settings</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="tier-badge"><span class="tier-dot"></span><span>Free Tier Active</span></div>
+        <p class="ver">v1.0 Prototype</p>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar glass">
+        <div class="topbar-left">
+          <h1 id="page-title">Dashboard</h1>
+          <span class="breadcrumb">College Outreach Automation</span>
+        </div>
+        <div class="topbar-right">
+          <div class="status-pill" id="status-pill">
+            <span class="pulse" id="status-pulse"></span>
+            <span id="status-text">Connecting…</span>
+          </div>
+          <button class="btn-primary" id="launch-btn">Launch Campaign</button>
+        </div>
+      </header>
+
+      <!-- ══ DASHBOARD ══ -->
+      <section class="view active" id="view-dashboard">
+        <div class="bento-grid">
+
+          <div class="bento-card stat-card glass">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">👥</div>
+            <div class="stat-body"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Contacts</div></div>
+            <div class="stat-trend up" id="stat-trend-contacts">—</div>
+          </div>
+
+          <div class="bento-card stat-card glass">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#10b981,#059669)">✉️</div>
+            <div class="stat-body"><div class="stat-num" id="stat-sent">0</div><div class="stat-label">Messages Sent</div></div>
+            <div class="stat-trend up">Last campaign</div>
+          </div>
+
+          <div class="bento-card stat-card glass">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">⚡</div>
+            <div class="stat-body"><div class="stat-num" id="stat-rate">0%</div><div class="stat-label">Success Rate</div></div>
+            <div class="stat-trend neutral" id="stat-trend-rate">—</div>
+          </div>
+
+          <div class="bento-card stat-card glass">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626)">📡</div>
+            <div class="stat-body"><div class="stat-num">4</div><div class="stat-label">Active Channels</div></div>
+            <div class="stat-trend up">All Ready</div>
+          </div>
+
+          <!-- Channel cards -->
+          <div class="bento-card channel-card glass">
+            <div class="ch-header"><span class="ch-icon">✉️</span><span class="ch-name">Email</span><span class="ch-badge">EmailJS</span></div>
+            <div class="ch-limit">200 / month</div>
+            <div class="ch-bar"><div class="ch-fill" id="email-bar" style="width:0%"></div></div>
+            <div class="ch-desc">Any valid email · Free tier · Jinja2 templates</div>
+            <div class="ch-toggle-row"><label class="toggle"><input type="checkbox" id="toggle-email" checked /><span class="slider"></span></label><span class="toggle-label">Enabled</span></div>
+          </div>
+
+          <div class="bento-card channel-card glass">
+            <div class="ch-header"><span class="ch-icon">💬</span><span class="ch-name">SMS</span><span class="ch-badge">Twilio</span></div>
+            <div class="ch-limit">Verified only</div>
+            <div class="ch-bar"><div class="ch-fill sms" id="sms-bar" style="width:0%"></div></div>
+            <div class="ch-desc">Trial: verified numbers only · Auto normalize</div>
+            <div class="ch-toggle-row"><label class="toggle"><input type="checkbox" id="toggle-sms" checked /><span class="slider"></span></label><span class="toggle-label">Enabled</span></div>
+          </div>
+
+          <div class="bento-card channel-card glass">
+            <div class="ch-header"><span class="ch-icon">📱</span><span class="ch-name">WhatsApp</span><span class="ch-badge">Meta API</span></div>
+            <div class="ch-limit">Cloud API / PyWhatKit</div>
+            <div class="ch-bar"><div class="ch-fill wa" id="wa-bar" style="width:0%"></div></div>
+            <div class="ch-desc">Auto-fallback to browser automation</div>
+            <div class="ch-toggle-row"><label class="toggle"><input type="checkbox" id="toggle-wa" checked /><span class="slider"></span></label><span class="toggle-label">Enabled</span></div>
+          </div>
+
+          <div class="bento-card channel-card glass">
+            <div class="ch-header"><span class="ch-icon">📞</span><span class="ch-name">Voice</span><span class="ch-badge">Twilio TTS</span></div>
+            <div class="ch-limit">Verified only</div>
+            <div class="ch-bar"><div class="ch-fill voice" id="voice-bar" style="width:0%"></div></div>
+            <div class="ch-desc">Polly.Aditi TTS · DTMF key press gather</div>
+            <div class="ch-toggle-row"><label class="toggle"><input type="checkbox" id="toggle-voice" checked /><span class="slider"></span></label><span class="toggle-label">Enabled</span></div>
+          </div>
+
+          <!-- Activity log (wide) -->
+          <div class="bento-card activity-card glass bento-wide">
+            <div class="card-heading"><span>📋 Activity Log</span><button class="btn-ghost" id="clear-log-btn">Clear</button></div>
+            <div class="log-feed" id="log-feed">
+              <div class="log-entry info"><span class="log-ts">--:--:--</span><span class="log-msg">System ready.</span></div>
+            </div>
+          </div>
+
+          <!-- Quick-start -->
+          <div class="bento-card quick-card glass">
+            <div class="card-heading"><span>🎯 Quick Launch</span></div>
+            <div class="quick-steps">
+              <div class="q-step" id="q1"><span class="q-num">1</span><span>Load CSV</span></div>
+              <div class="q-step" id="q2"><span class="q-num">2</span><span>Select Channels</span></div>
+              <div class="q-step" id="q3"><span class="q-num">3</span><span>Run Campaign</span></div>
+              <div class="q-step" id="q4"><span class="q-num">4</span><span>View Results</span></div>
+            </div>
+            <button class="btn-primary full-w" id="ql-load-btn">📂 Load Contacts</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ CONTACTS ══ -->
+      <section class="view" id="view-contacts">
+        <div class="bento-grid">
+          <div class="bento-card glass bento-full">
+            <div class="card-heading">
+              <span>👥 Contact Manager</span>
+              <div class="btn-row">
+                <button class="btn-ghost" id="add-contact-btn">+ Add</button>
+                <button class="btn-ghost" id="import-csv-btn">📂 Import CSV</button>
+                <button class="btn-ghost" id="export-contacts-btn">⬇ Export CSV</button>
+                <input type="file" id="csv-file-input" accept=".csv" style="display:none" />
+              </div>
+            </div>
+            <div class="search-bar-wrap">
+              <input type="text" class="glass-input" id="search-contacts" placeholder="🔍  Search contacts…" />
+            </div>
+            <div class="contacts-table-wrap">
+              <table class="contacts-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>City</th><th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="contacts-tbody">
+                  <tr class="empty-row"><td colspan="7">No contacts loaded. Import a CSV or add manually.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span id="contact-count-label">0 contacts</span>
+              <button class="btn-ghost danger" id="delete-selected-btn">🗑 Delete Selected</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Contact Modal -->
+        <div class="modal-overlay" id="add-modal">
+          <div class="modal glass">
+            <div class="modal-header"><h3>Add Contact</h3><button class="close-btn" id="close-modal-btn">✕</button></div>
+            <div class="modal-body">
+              <div class="form-row"><label>Name</label><input type="text" id="m-name" class="glass-input" placeholder="Ravi Kumar" /></div>
+              <div class="form-row"><label>Email</label><input type="email" id="m-email" class="glass-input" placeholder="ravi@example.com" /></div>
+              <div class="form-row"><label>Phone</label><input type="text" id="m-phone" class="glass-input" placeholder="+919876543210" /></div>
+              <div class="form-row"><label>Course</label><input type="text" id="m-course" class="glass-input" placeholder="B.Tech Computer Science" /></div>
+              <div class="form-row"><label>City</label><input type="text" id="m-city" class="glass-input" placeholder="Aurangabad" /></div>
+              <button class="btn-primary full-w" id="save-contact-btn">Save Contact</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ CAMPAIGN ══ -->
+      <section class="view" id="view-campaign">
+        <div class="bento-grid">
+
+          <div class="bento-card glass bento-half">
+            <div class="card-heading"><span>🚀 Campaign Builder</span></div>
+            <div class="form-row"><label>Campaign Name</label><input type="text" id="camp-name" class="glass-input" value="Summer Admissions 2025-26" /></div>
+            <div class="form-row"><label>Contact Limit (blank = all)</label><input type="number" id="camp-limit" class="glass-input" placeholder="e.g. 10" min="1" /></div>
+            <div class="form-row">
+              <label>Select Channels</label>
+              <div class="channel-chips">
+                <label class="chip" id="chip-email"><input type="checkbox" checked />✉️ Email</label>
+                <label class="chip" id="chip-sms"><input type="checkbox" checked />💬 SMS</label>
+                <label class="chip" id="chip-wa"><input type="checkbox" checked />📱 WhatsApp</label>
+                <label class="chip" id="chip-voice"><input type="checkbox" checked />📞 Voice</label>
+              </div>
+            </div>
+            <div class="form-row"><label>Delay Between Sends (sec)</label><input type="number" id="camp-delay" class="glass-input" value="0.5" step="0.1" min="0" /></div>
+            <div class="launch-actions">
+              <button class="btn-primary" id="run-campaign-btn">⚡ Run Campaign</button>
+              <button class="btn-ghost" id="preview-btn">👁 Preview</button>
+            </div>
+          </div>
+
+          <div class="bento-card glass bento-half">
+            <div class="card-heading"><span>📝 Message Preview</span></div>
+            <div class="preview-tabs">
+              <button class="ptab active" data-tab="email">Email</button>
+              <button class="ptab" data-tab="sms">SMS</button>
+              <button class="ptab" data-tab="whatsapp">WhatsApp</button>
+              <button class="ptab" data-tab="voice">Voice</button>
+            </div>
+            <div class="preview-panel" id="preview-email">
+              <div class="preview-email-card">
+                <div class="pe-header">🎓 College Admissions</div>
+                <p class="pe-subject">Subject: Admissions Open for [Course] — [College]</p>
+                <p class="pe-body">Dear <strong>[Name]</strong>,<br><br>We are delighted to inform you that admissions for <strong>[Course]</strong> are now open for <strong>2025-26</strong>.<br><br>Based in <strong>[City]</strong>, you are just a step away from an extraordinary journey…</p>
+                <a class="pe-cta">Apply Now →</a>
+              </div>
+            </div>
+            <div class="preview-panel hidden" id="preview-sms">
+              <div class="sms-bubble">Dear [Name], Admissions for [Course] at [College] are now OPEN for 2025-26! Limited seats. Apply: https://yourcollege.edu.in | Reply STOP to opt out.</div>
+            </div>
+            <div class="preview-panel hidden" id="preview-whatsapp">
+              <div class="wa-bubble">📱 Hi [Name],<br>Hello from [College]! We are excited to share our latest admission updates.</div>
+            </div>
+            <div class="preview-panel hidden" id="preview-voice">
+              <div class="voice-script">
+                <p>🔊 <em>"Hello, [Name]. This is a message from [College]."</em></p>
+                <p>🔊 <em>"Admissions for [Course] are now open. Seats are limited."</em></p>
+                <p>🔊 <em>"Press 1 to know more. Press 9 to opt out."</em></p>
+                <p>🔊 <em>"Visit [website] to apply online. Thank you!"</em></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress card -->
+          <div class="bento-card glass bento-full" id="progress-card" style="display:none">
+            <div class="card-heading"><span>⚡ Campaign in Progress</span><span id="prog-percent">0%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+            <div class="prog-stats">
+              <span>✅ Sent: <strong id="p-sent">0</strong></span>
+              <span>⏭ Skipped: <strong id="p-skip">0</strong></span>
+              <span>❌ Failed: <strong id="p-fail">0</strong></span>
+              <span>⏳ Remaining: <strong id="p-rem">—</strong></span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ RESULTS ══ -->
+      <section class="view" id="view-results">
+        <div class="bento-grid">
+
+          <div class="bento-card glass bento-third">
+            <div class="card-heading"><span>📊 Summary</span></div>
+            <div class="result-ring-wrap">
+              <svg viewBox="0 0 120 120" class="ring-svg">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#6366f1" stroke-width="12"
+                  stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"
+                  transform="rotate(-90 60 60)" id="ring-progress"/>
+              </svg>
+              <div class="ring-center"><div class="ring-num" id="ring-rate">0%</div><div class="ring-lbl">Success</div></div>
+            </div>
+            <div class="result-breakdown">
+              <div class="rb-row"><span class="rb-dot sent"></span>Sent <strong id="rb-sent">0</strong></div>
+              <div class="rb-row"><span class="rb-dot skip"></span>Skipped <strong id="rb-skip">0</strong></div>
+              <div class="rb-row"><span class="rb-dot fail"></span>Failed <strong id="rb-fail">0</strong></div>
+            </div>
+          </div>
+
+          <div class="bento-card glass bento-twothird">
+            <div class="card-heading">
+              <span>📋 Detailed Results</span>
+              <div class="btn-row">
+                <button class="btn-ghost" id="export-json-btn">⬇ Export JSON</button>
+                <button class="btn-ghost" id="view-logs-btn">📁 Logs</button>
+              </div>
+            </div>
+            <div class="results-filter">
+              <button class="filter-chip active" data-filter="all">All</button>
+              <button class="filter-chip" data-filter="sent">✅ Sent</button>
+              <button class="filter-chip" data-filter="skipped">⏭ Skipped</button>
+              <button class="filter-chip" data-filter="error">❌ Error</button>
+            </div>
+            <div class="results-table-wrap">
+              <table class="contacts-table">
+                <thead><tr><th>Contact</th><th>Channel</th><th>Status</th><th>Email/Phone</th><th>Note</th></tr></thead>
+                <tbody id="results-tbody">
+                  <tr class="empty-row"><td colspan="5">No results yet. Run a campaign first.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bento-card glass bento-full">
+            <div class="card-heading"><span>📈 Channel Breakdown</span></div>
+            <div class="channel-bars">
+              <div class="cbar-row"><span class="cbar-label">✉️ Email</span><div class="cbar-track"><div class="cbar-fill email" id="res-email-bar" style="width:0%"></div></div><span class="cbar-val" id="res-email-val">0</span></div>
+              <div class="cbar-row"><span class="cbar-label">💬 SMS</span><div class="cbar-track"><div class="cbar-fill sms" id="res-sms-bar" style="width:0%"></div></div><span class="cbar-val" id="res-sms-val">0</span></div>
+              <div class="cbar-row"><span class="cbar-label">📱 WhatsApp</span><div class="cbar-track"><div class="cbar-fill wa" id="res-wa-bar" style="width:0%"></div></div><span class="cbar-val" id="res-wa-val">0</span></div>
+              <div class="cbar-row"><span class="cbar-label">📞 Voice</span><div class="cbar-track"><div class="cbar-fill voice" id="res-voice-bar" style="width:0%"></div></div><span class="cbar-val" id="res-voice-val">0</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ SETTINGS ══ -->
+      <section class="view" id="view-settings">
+        <div class="bento-grid">
+
+          <div class="bento-card glass bento-half">
+            <div class="card-heading"><span>✉️ EmailJS Config</span></div>
+            <div class="form-row"><label>Service ID</label><input type="text" class="glass-input" id="s-ejs-sid" placeholder="service_xxxxxxx" /></div>
+            <div class="form-row"><label>Template ID</label><input type="text" class="glass-input" id="s-ejs-tid" placeholder="template_xxxxxxx" /></div>
+            <div class="form-row"><label>Public Key</label><input type="text" class="glass-input" id="s-ejs-pub" placeholder="xxxxxxxxxxxxxxxxxxxx" /></div>
+            <div class="form-row"><label>Private Key</label><input type="password" class="glass-input" id="s-ejs-priv" placeholder="••••••••••••" /></div>
+            <div class="form-row"><label>From Name</label><input type="text" class="glass-input" id="s-ejs-from" placeholder="College Admissions" /></div>
+            <div class="form-row"><label>Reply-To Email</label><input type="email" class="glass-input" id="s-ejs-reply" placeholder="admissions@college.edu" /></div>
+          </div>
+
+          <div class="bento-card glass bento-half">
+            <div class="card-heading"><span>💬 Twilio Config</span></div>
+            <div class="form-row"><label>Account SID</label><input type="text" class="glass-input" id="s-tw-sid" placeholder="ACxxxxxxxxxxxxxxxx" /></div>
+            <div class="form-row"><label>Auth Token</label><input type="password" class="glass-input" id="s-tw-token" placeholder="••••••••••••••••" /></div>
+            <div class="form-row"><label>From Number</label><input type="text" class="glass-input" id="s-tw-from" placeholder="+1xxxxxxxxxx" /></div>
+            <div class="form-row"><label>Verified Numbers (comma-sep)</label><input type="text" class="glass-input" id="s-tw-verified" placeholder="+919876543210,+918765432109" /></div>
+          </div>
+
+          <div class="bento-card glass bento-half">
+            <div class="card-heading"><span>📱 WhatsApp Config</span></div>
+            <div class="form-row"><label>API Token</label><input type="password" class="glass-input" id="s-wa-token" placeholder="Bearer token…" /></div>
+            <div class="form-row"><label>Phone Number ID</label><input type="text" class="glass-input" id="s-wa-pid" placeholder="1234567890" /></div>
+          </div>
+
+          <div class="bento-card glass bento-half">
+            <div class="card-heading"><span>🏫 College Info</span></div>
+            <div class="form-row"><label>College Name</label><input type="text" class="glass-input" id="s-col-name" placeholder="Example College of Engineering" /></div>
+            <div class="form-row"><label>Phone</label><input type="text" class="glass-input" id="s-col-phone" placeholder="+91-XXXXXXXXXX" /></div>
+            <div class="form-row"><label>Website</label><input type="text" class="glass-input" id="s-col-web" placeholder="https://yourcollege.edu.in" /></div>
+            <div class="form-row"><label>Admission Year</label><input type="text" class="glass-input" id="s-col-year" placeholder="2025-26" /></div>
+          </div>
+
+          <div class="bento-card glass bento-full settings-actions">
+            <button class="btn-primary" id="save-settings-btn">💾 Save to .env</button>
+            <button class="btn-ghost" id="reset-settings-btn">↩ Reset Fields</button>
+            <button class="btn-ghost" id="view-logs-btn-s">📁 View Saved Logs</button>
+            <div class="settings-note">✅ Settings are written directly to your <code>.env</code> file via the server API.</div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Log History Modal -->
+  <div class="modal-overlay" id="log-history-modal">
+    <div class="modal glass" style="width:560px;max-width:95vw">
+      <div class="modal-header">
+        <h3>📁 Saved Campaign Logs</h3>
+        <button class="close-btn" id="close-log-modal-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Click any log to load its results.</p>
+        <div class="log-feed" id="log-history-body" style="max-height:320px">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
